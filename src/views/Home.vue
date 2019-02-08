@@ -29,6 +29,7 @@ export default {
   methods: {
     onLoggedIn(value) {
       this.loggedIn = value;
+      this.$emit('loggedIn', this.loggedIn);
     },
   },
 };
