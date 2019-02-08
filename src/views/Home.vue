@@ -1,18 +1,35 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div v-if="loggedIn">
+      <Tasks msg="Welcome to 'The all new things' app"/>
+    </div>
+    <div v-else>
+      <Login @logged="onLoggedIn"/>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import Tasks from '@/components/Tasks.vue';
+import Login from '@/components/Login.vue';
 
 export default {
   name: 'home',
   components: {
-    HelloWorld,
+    Tasks,
+    Login,
+  },
+  data() {
+    return {
+      loggedIn: false,
+    };
+  },
+  methods: {
+    onLoggedIn(value) {
+      this.loggedIn = value;
+    },
   },
 };
 </script>
