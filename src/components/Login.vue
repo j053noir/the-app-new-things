@@ -5,7 +5,7 @@
       <label for="inputEmail" class="sr-only">Email address</label>
       <input
         type="email"
-        id="inputEmail"
+        v-model="email"
         class="form-control"
         placeholder="Email address"
         required
@@ -14,19 +14,14 @@
       <label for="inputPassword" class="sr-only">Password</label>
       <input
         type="password"
-        id="inputPassword"
+        v-model="password"
         class="form-control"
         placeholder="Password"
         required
       >
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
       <button
         class="btn btn-lg btn-primary btn-block"
-        type="submit"
+        type="button"
         @click="submit"
       >Sign in</button>
       <p class="mt-5 mb-3 text-muted">© 2019</p>
@@ -37,9 +32,38 @@
 <script>
 export default {
   name: 'Login',
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
   methods: {
     submit() {
-      this.$emit('logged', true);
+      const form = {
+        email: this.email,
+        password: this.password,
+      };
+      fetch('http://localhost:3000/api/users/signin', {
+        method: 'POST',
+        body: JSON.stringify(form),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          if (data.success) {
+            // TODO Save JWT to localstorage
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
   },
 };
