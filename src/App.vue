@@ -1,12 +1,29 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
+    <div id="nav" v-if="navbarShow">
+      <router-link to="/">Tasks</router-link>|
       <router-link to="/about">About</router-link>
     </div>
-    <router-view/>
+    <router-view @loggedIn="loggedIn"/>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'app',
+  data() {
+    return {
+      navbarShow: false,
+    };
+  },
+  methods: {
+    loggedIn(value) {
+      this.navbarShow = value;
+    },
+  },
+};
+</script>
+
 
 <style lang="scss">
 #app {
