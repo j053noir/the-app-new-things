@@ -5,22 +5,25 @@
     <div v-if="loading">
       <p>Loading...</p>
     </div>
-    <div v-else>
+    <div v-else class="container">
       <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
+          <formTask @save="create" ref="formTask"></formTask>
+        </div>
+        <div class="col-12 col-md-6">
           <task
             v-for="item in items"
+            @editTask="editTask"
             class="mb-1"
-            :key="item._id"
+            :key="item.id"
+            :taskId="item.id"
+            :authorId="item.authorId"
             :photo="item.photo_url"
             :description="item.description"
             :author="item.author"
             :created_at="item.createdAt"
             :completed="item.completed"
           />
-        </div>
-        <div class="col-6">
-          <formTask @save="create"></formTask>
         </div>
       </div>
     </div>
@@ -38,7 +41,7 @@ export default {
   data() {
     return {
       page: 1,
-    }
+    };
   },
   components: {
     task: Task,
@@ -54,9 +57,14 @@ export default {
     };
   },
   created() {
-    fetch(`http://localhost:3000/api/tasks?limit=10&sortby=createdAt&direction=desc&page=${this.page}`, {
-      headers: authHeader(),
-    })
+    fetch(
+      `http://localhost:3000/api/tasks?limit=10&sortby=createdAt&direction=desc&page=${
+        this.page
+      }`,
+      {
+        headers: authHeader(),
+      },
+    )
       .then(response => response.json())
       .then(data => {
         if (!data.success) {
@@ -68,14 +76,16 @@ export default {
           const { items = [] } = data;
           const tasks = items.map(item => {
             const { author = {} } = item;
-            const { firstname = 'anonimo', lastname = '', photo_url }  = author;
+            const { _id, firstname = 'anonimo', lastname = '', photo_url } = author;
             const date = formatDate(new Date(item.createdAt));
             return {
+              id: item._id,
               photo_url,
+              authorId: _id,
               description: item.description,
-              completed: item.completed, 
+              completed: item.completed,
               author: `${firstname} ${lastname}`,
-              createdAt: date
+              createdAt: date,
             };
           });
 
@@ -86,10 +96,42 @@ export default {
   },
   methods: {
     create(task) {
-      console.log('task created', task);
+      const headers = { 'Content-Type': 'application/json' };
+      const method = task.id ? 'PUT' : 'POST';
+      fetch(`http://localhost:3000/api/tasks/${task.id}`, {
+        method: method,
+        body: JSON.stringify(task),
+        headers: Object.assign(headers, authHeader()),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.success) {
+            alert(data.message);
+          } else {
+            const {item = {}} = data;
+            const {author = {}} = item;
+            const { firstname = 'anonimo', lastname = '', photo_url } = author;
+            const date = formatDate(new Date(item.createdAt));
+            const task = {
+              photo_url,
+              description: item.description,
+              completed: item.completed,
+              author: `${firstname} ${lastname}`,
+              createdAt: date,
+            };
+            this.items.unshift(task);
+          }
+        });
     },
-
-  }
+    editTask(task) {
+      // var index = this.items.findIndex((value, index) => {
+      //   console.log(value);
+      //   return value.id === task.id;
+      // });
+      // this.items.splice(index, 1);
+      this.$refs.formTask.setTask(task);
+    }
+  },
 };
 </script>
 

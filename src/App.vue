@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <div id="nav" v-if="navbarShow">
-      <router-link to="/">Tasks</router-link>
+      <router-link to="/">Tasks</router-link>&nbsp;|
+      <a @click="logout">Sign out</a>
     </div>
     <router-view @loggedIn="loggedIn"/>
   </div>
@@ -19,6 +20,11 @@ export default {
     loggedIn(value) {
       this.navbarShow = value;
     },
+    logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      location.reload(true);
+    }
   },
 };
 </script>

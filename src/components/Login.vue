@@ -24,6 +24,9 @@
         type="button"
         @click="submit"
       >Sign in</button>
+      <div class="form-group mt-3">
+        <router-link class to="/signup">Crear cuenta</router-link>
+      </div>
       <p class="mt-5 mb-3 text-muted">© 2019</p>
     </form>
   </div>

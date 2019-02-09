@@ -6,22 +6,41 @@
     </div>
     <div class="form-group">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value>
+        <input
+          class="form-check-input"
+          type="checkbox"
+          v-model="completed"
+          value
+        >
         <label class="form-check-label" for="defaultCheck1">Is completed?</label>
       </div>
     </div>
     <div class="form-group">
       <label>Author</label>
       <select v-model="author" class="form-control">
-        <option v-for="user in users" :key="user._id" :value="user._id">{{user.fullname}}</option>
+        <option
+          v-for="user in users"
+          :key="user._id"
+          :value="user._id"
+        >{{user.fullname}}</option>
       </select>
+    </div>
+    <div class="form-group">
+      <button type="button" class="btn btn-success" @click="save">Guardar</button>
     </div>
   </form>
 </template>
 
-<style>
+"<style lang="scss">
 #formTask {
   max-width: 320px;
+  background-color: #ccc;
+  border-radius: 25px;
+  padding: 25px;
+
+  label {
+    font-weight: bold;
+  }
 }
 </style>
 
@@ -33,6 +52,7 @@ export default {
   name: 'formTask',
   data() {
     return {
+      id: '',
       description: '',
       author: '',
       completed: false,
@@ -60,10 +80,17 @@ export default {
   methods: {
     save() {
       this.$emit('save', {
+        id: this.id,
         description: this.description,
         author: this.author,
         completed: this.completed,
       });
+    },
+    setTask(task) {
+      this.id = task.id;
+      this.description = task.description;
+      this.author = task.author;
+      this.completed = task.completed;
     },
   },
 };
