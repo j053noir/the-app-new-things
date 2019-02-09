@@ -19,7 +19,5 @@ export function formatDate(date) {
   const monthIndex = date.getMonth();
   const year = date.getFullYear();
 
-  console.log('entro');
-
   return `${day} ${monthNames[monthIndex]} ${year}`;
 }
