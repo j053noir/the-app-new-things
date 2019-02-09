@@ -38,6 +38,11 @@ export default {
       password: '',
     };
   },
+  created() {
+    if (localStorage.getItem('token')) {
+      this.$emit('logged', true);
+    }
+  },
   methods: {
     submit() {
       const form = {
@@ -56,9 +61,14 @@ export default {
         })
         .then(data => {
           if (data.success) {
-            // TODO Save JWT to localstorage
+            localStorage.setItem('user', JSON.stringify(data.item));
+            localStorage.setItem('token', data.meta.token);
+            this.$emit('logged', true);
           } else {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
             alert(data.message);
+            this.$emit('logged', false);
           }
         })
         .catch(err => {
