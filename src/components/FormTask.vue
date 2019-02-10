@@ -26,7 +26,12 @@
       </select>
     </div>
     <div class="form-group">
-      <button type="button" class="btn btn-success" @click="save">Guardar</button>
+      <button
+        type="button"
+        v-bind:disabled="loading"
+        class="btn btn-success"
+        @click="save"
+      >{{button}}</button>
     </div>
   </form>
 </template>
@@ -57,10 +62,12 @@ export default {
       author: '',
       completed: false,
       users: [],
+      loading: false,
+      button: 'Save',
     };
   },
   created() {
-    fetch('http://localhost:3000/api/users', {
+    fetch(`${process.env.VUE_APP_API_ROOT}/users`, {
       headers: authHeader(),
     })
       .then(response => response.json())
@@ -79,18 +86,32 @@ export default {
   },
   methods: {
     save() {
-      this.$emit('save', {
-        id: this.id,
-        description: this.description,
-        author: this.author,
-        completed: this.completed,
-      });
+      if (this.loading === false) {
+        this.loading = true;
+        this.button = '...';
+        this.$emit('save', {
+          id: this.id,
+          description: this.description,
+          author: this.author,
+          completed: this.completed,
+        });
+      }
     },
     setTask(task) {
-      this.id = task.id;
-      this.description = task.description;
-      this.author = task.author;
-      this.completed = task.completed;
+      if (this.loading === false) {
+        this.id = task.id;
+        this.description = task.description;
+        this.author = task.author;
+        this.completed = task.completed;
+      }
+    },
+    reset() {
+      this.id = '';
+      this.description = '';
+      this.author = '';
+      this.completed = false;
+      this.loading = false;
+      this.button = 'Save';
     },
   },
 };

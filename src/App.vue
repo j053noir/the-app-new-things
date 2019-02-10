@@ -2,7 +2,7 @@
   <div id="app">
     <div id="nav" v-if="navbarShow">
       <router-link to="/">Tasks</router-link>&nbsp;|
-      <a @click="logout">Sign out</a>
+      <a class="signout" @click="logout">Sign out</a>
     </div>
     <router-view @loggedIn="loggedIn"/>
   </div>
@@ -24,7 +24,7 @@ export default {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       location.reload(true);
-    }
+    },
   },
 };
 </script>
@@ -45,10 +45,14 @@ body {
 #nav {
   padding: 30px;
   a {
+    cursor: pointer;
     font-weight: bold;
     color: #2c3e50;
     &.router-link-exact-active {
       color: #42b983;
+    }
+    &.signout {
+      color: crimson;
     }
   }
 }

@@ -69,16 +69,14 @@ export default {
         email: this.email,
         password: this.password,
       };
-      fetch('http://localhost:3000/api/users/signup', {
+      fetch(`${process.env.VUE_APP_API_ROOT}/users/signup`, {
         method: 'POST',
         body: JSON.stringify(form),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-        .then(response => {
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           if (!data.success) {
             alert(data.message);

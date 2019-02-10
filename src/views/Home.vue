@@ -5,7 +5,7 @@
       <Tasks msg="Welcome to 'The all new things' app"/>
     </div>
     <div v-else>
-      <Login @logged="onLoggedIn"/>
+      <SignIn @logged="onLoggedIn"/>
     </div>
   </div>
 </template>
@@ -13,13 +13,13 @@
 <script>
 // @ is an alias to /src
 import Tasks from '@/components/Tasks.vue';
-import Login from '@/components/Login.vue';
+import SignIn from '@/components/SignIn.vue';
 
 export default {
   name: 'home',
   components: {
     Tasks,
-    Login,
+    SignIn,
   },
   data() {
     return {

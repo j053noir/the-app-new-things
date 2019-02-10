@@ -34,7 +34,7 @@
 
 <script>
 export default {
-  name: 'Login',
+  name: 'SignIn',
   data() {
     return {
       email: '',
@@ -52,16 +52,14 @@ export default {
         email: this.email,
         password: this.password,
       };
-      fetch('http://localhost:3000/api/users/signin', {
+      fetch(`${process.env.VUE_APP_API_ROOT}/users/signin`, {
         method: 'POST',
         body: JSON.stringify(form),
         headers: {
           'Content-Type': 'application/json',
         },
       })
-        .then(response => {
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           if (data.success) {
             localStorage.setItem('user', JSON.stringify(data.item));
