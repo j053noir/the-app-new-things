@@ -1,7 +1,14 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <button class="btn btn-warning btn-sm float-right" @click="edit">Edit</button>
+      <div class="btn-group float-right" role="group" v-if="owner">
+        <button class="btn btn-warning btn-sm" @click="edit">
+          <font-awesome-icon icon="edit"/>
+        </button>
+        <button class="btn btn-danger btn-sm" @click="remove">
+          <font-awesome-icon icon="trash"/>
+        </button>
+      </div>
     </div>
     <div class="card-body">
       <div class="col">
@@ -49,25 +56,43 @@ export default {
       type: String,
     },
   },
+  data() {
+    return {
+      owner: false,
+    };
+  },
+  created() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const { _id = {} } = user;
+    this.owner = _id === this.authorId;
+  },
   methods: {
     edit() {
       this.$emit('editTask', {
         id: this.taskId,
         description: this.description,
         author: this.authorId,
-        completed: this.completed
-      })
-    }
-  }
+        completed: this.completed,
+      });
+    },
+    remove() {
+      this.$emit('removeTask', {
+        id: this.taskId,
+        description: this.description,
+      });
+    },
+  },
 };
 </script>
 
 <style lang="scss">
 .card {
+  padding-right: 0;
+  padding-left: 0;
   max-width: 320px;
-  margin: auto;
   .card-header {
     background-color: #4292ba;
+    min-height: 56px;
   }
   .card-body {
     p {
